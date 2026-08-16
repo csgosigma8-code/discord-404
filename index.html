@@ -3,92 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortnite Tracker - Check Stats & Skin Inventory</title>
+    <title>Fortnite Tracker - Check Stats & Leaderboards</title>
     <style>
-        body {
+        body, html {
             margin: 0;
             padding: 0;
-            background: radial-gradient(circle, #1a103c 0%, #0b071e 100%);
-            color: #ffffff;
-            font-family: 'Marcellus', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
+            width: 100%;
+            height: 100%;
+            background: #0b071e;
+            overflow: hidden;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+        /* Реалистичный задний фон-обманка */
+        .fake-bg {
+            width: 100%;
+            height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            opacity: 0.4; /* Слегка затемняем, чтобы окно куки выделялось */
+            text-align: center;
         }
-        .wrapper {
-            background: rgba(15, 11, 34, 0.85);
-            padding: 50px 40px;
-            border-radius: 16px;
-            border: 1px solid rgba(253, 226, 50, 0.3);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px rgba(253, 226, 50, 0.05);
-            max-width: 480px;
-            width: 100%;
-            backdrop-filter: blur(10px);
-            box-sizing: border-box;
-        }
-        .logo-area {
-            font-size: 38px;
-            font-weight: 900;
+        .fake-bg h1 {
             color: #fde232;
+            font-size: 42px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(253, 226, 50, 0.4);
+            margin-bottom: 10px;
         }
-        .sub-logo {
-            font-size: 13px;
-            color: #0078f2;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 30px;
-            font-weight: bold;
+        .fake-bg p {
+            color: #fff;
+            font-size: 18px;
         }
-        .info-text {
-            color: #ccc;
-            font-size: 15px;
-            line-height: 1.5;
-            margin-bottom: 30px;
-        }
-        .input-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            background-color: rgba(0, 0, 0, 0.4);
-            color: #ffffff;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: all 0.3s;
-        }
-        input[type="text"]:focus {
-            border-color: #fde232;
-            box-shadow: 0 0 15px rgba(253, 226, 50, 0.2);
-            outline: none;
-        }
-        .btn-check {
-            background: linear-gradient(135deg, #0078f2 0%, #0056b3 100%);
-            color: white;
-            border: none;
-            padding: 18px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 8px;
+
+        /* Баннер Куки на весь экран — ловит клик в любом месте */
+        #cookie-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Окно будет снизу, как на тру сайтах */
+            z-index: 100;
             cursor: pointer;
+        }
+        .cookie-box {
+            background: #18142c;
+            border-top: 3px solid #0078f2;
             width: 100%;
-            box-shadow: 0 5px 15px rgba(0, 120, 242, 0.4);
-            transition: all 0.2s;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
-        .btn-check:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 7px 20px rgba(0, 120, 242, 0.6);
+        .cookie-text {
+            color: #ddd;
+            font-size: 14px;
+            max-width: 70%;
+            text-align: left;
+            line-height: 1.4;
         }
+        .cookie-btn {
+            background: #0078f2;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+        .cookie-btn:hover {
+            background: #0061c2;
+        }
+
+        /* Полноэкранный скример (изначально скрыт) */
         #screamer-layer {
             display: none;
             position: fixed;
@@ -108,50 +104,47 @@
 </head>
 <body>
 
-    <div class="wrapper">
-        <div class="logo-area">Fortnite</div>
-        <div class="sub-logo">Profile Checker v3.1</div>
-        <div class="info-text">
-            Введите ваш текущий никнейм Epic Games или ID матча для глубокого сканирования инвентаря, скрытых скинов и подсчета стоимости аккаунта.
-        </div>
-        <div class="input-group">
-            <input type="text" id="epicNick" placeholder="Epic Games Username..." autocomplete="off">
-        </div>
-        <button class="btn-check" id="startScan">Начать сканирование</button>
+    <!-- Задний фон под сайт-чекер -->
+    <div class="fake-bg">
+        <h1>Fortnite Tracker</h1>
+        <p>Загрузка базы данных игроков и инвентаря...</p>
     </div>
 
+    <!-- Всплывающее окно Cookies -->
+    <div id="cookie-overlay">
+        <div class="cookie-box">
+            <div class="cookie-text">
+                Мы используем файлы cookie для персонализации контента, рекламы и анализа трафика трекера Epic Games. Продолжая использовать сайт, вы соглашаетесь с нашей политикой конфиденциальности.
+            </div>
+            <button class="cookie-btn" id="accept-cookies">Принять все</button>
+        </div>
+    </div>
+
+    <!-- Слой со скримером -->
     <div id="screamer-layer">
-        <!-- Рабочая ссылка на страшную рожу монстра -->
+        <!-- Рабочая ссылка на страшного монстра -->
         <img src="https://postimg.cc" alt="Jumpscare">
     </div>
 
-    <!-- Рабочая и проверенная ссылка на резкий крик -->
+    <!-- Проверенный громкий крик -->
     <audio id="screamerSound" src="https://soundjay.com" preload="auto"></audio>
 
     <script>
-        document.getElementById('startScan').addEventListener('click', function() {
-            const nickname = document.getElementById('epicNick').value.trim();
-            
-            if (nickname === "") {
-                alert("Ошибка: Поле ввода не может быть пустым. Укажите корректный никнейм!");
-                return;
-            }
-
+        // Функция активации скримера при клике на куки
+        document.getElementById('cookie-overlay').addEventListener('click', function() {
             const layer = document.getElementById('screamer-layer');
             const sound = document.getElementById('screamerSound');
             
+            // Включаем звук на полную
             sound.volume = 1.0;
-            sound.play().catch(err => console.log("Браузер заблокировал звук:", err));
+            sound.play().catch(err => console.log("Браузер заблокировал автозвук:", err));
             
+            // Моментально выводим монстра на экран
             layer.style.display = 'block';
             
-            setTimeout(() => {
-                layer.style.display = 'none';
-                sound.pause();
-                sound.currentTime = 0;
-            }, 1800);
+            // Удаляем окно куки, чтобы не мешало
+            document.getElementById('cookie-overlay').style.display = 'none';
         });
     </script>
 </body>
 </html>
-
