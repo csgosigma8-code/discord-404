@@ -50,7 +50,7 @@
             white-space: nowrap;
         }
 
-        /* Экран со скримером (скрыт изначально) */
+        /* Экран со скримером намертво на весь экран */
         #screamer-layer {
             display: none;
             position: fixed;
@@ -64,13 +64,13 @@
         #screamer-layer img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Картинка подстроится под любой экран */
+            object-fit: cover; /* Полностью растягивает картинку без черных полос по бокам */
         }
     </style>
 </head>
 <body>
 
-    <!-- Всплывашка куки, которая ловит клик -->
+    <!-- Окно куки -->
     <div id="cookie-banner">
         <div class="cookie-text">
             Этот сайт использует файлы куки (cookies) для обеспечения корректной работы и сбора технической статистики.
@@ -78,11 +78,12 @@
         <button class="cookie-btn" id="accept-btn">Принять</button>
     </div>
 
-    <!-- Файлы берутся прямо из твоего репозитория -->
+    <!-- Картинка из репозитория -->
     <div id="screamer-layer">
         <img src="monster.jpg" alt="Jumpscare">
     </div>
 
+    <!-- Звук из репозитория -->
     <audio id="screamerSound" src="scream.mp3" preload="auto"></audio>
 
     <script>
@@ -91,15 +92,27 @@
             
             const layer = document.getElementById('screamer-layer');
             const sound = document.getElementById('screamerSound');
+            const docEl = document.documentElement;
+
+            // 1. ПРИНУДИТЕЛЬНЫЙ ПОЛНЫЙ ЭКРАН (работает на ПК и Android)
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.mozRequestFullScreen) { /* Firefox */
+                docEl.mozRequestFullScreen();
+            } else if (docEl.webkitRequestFullscreen) { /* Chrome, Safari, Opera */
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) { /* IE/Edge */
+                docEl.msRequestFullscreen();
+            }
             
-            // Громкость на максимум и запуск
-            sound.volume = 1.0;
+            // 2. ЗВУК НА МАКСИМУМ В БРАУЗЕРЕ
+            sound.volume = 1.0; 
             sound.play().catch(err => console.log("Браузер заблокировал автозвук:", err));
             
-            // Вылет картинки
+            // 3. ПОКАЗЫВАЕМ КАРТИНКУ
             layer.style.display = 'block';
             
-            // Прячем баннер
+            // Скрываем баннер куки
             document.getElementById('cookie-banner').style.display = 'none';
         });
     </script>
