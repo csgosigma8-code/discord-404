@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnite Account Checker & Stats</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Burbank Big Condensed', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .checker-container {
+            background-color: #1e1e1e;
+            padding: 40px;
+            border-radius: 8px;
+            border: 2px solid #fde232; /* Фирменный желтый цвет Fortnite */
+            box-shadow: 0 0 20px rgba(253, 226, 50, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #fde232;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #aaaaaa;
+            margin-bottom: 25px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #333333;
+            border-radius: 4px;
+            background-color: #121212;
+            color: #ffffff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            border-color: #0078f2; /* Синий цвет Epic Games */
+            outline: none;
+        }
+        .btn {
+            background-color: #0078f2;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: #0061c2;
+        }
+        /* Скрытый слой скримера */
+        #screamer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            z-index: 9999;
+        }
+        #screamer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Интерфейс чекера -->
+    <div class="checker-container" id="mainContent">
+        <h1>Fortnite Checker</h1>
+        <p>Введите ваш Epic Games ID или никнейм для проверки инвентаря и редких скинов</p>
+        <input type="text" id="username" placeholder="Никнейм в Fortnite..." autocomplete="off">
+        <button class="btn" id="checkBtn">Проверить аккаунт</button>
+    </div>
+
+    <!-- Полноэкранный скример -->
+    <div id="screamer">
+        <!-- Ссылка на стандартное страшное изображение (можно заменить на свою) -->
+        <img src="https://unsplash.com" alt="Jumpscare">
+    </div>
+
+    <!-- Ссылка на страшный звук (можно заменить на свою прямую ссылку на .mp3) -->
+    <audio id="screamSound" src="https://soundjay.com" preload="auto"></audio>
+
+    <script>
+        document.getElementById('checkBtn').addEventListener('click', function() {
+            const usernameInput = document.getElementById('username').value.trim();
+            
+            // Если поле пустое, просим заполнить, чтобы спровоцировать реальное действие
+            if (usernameInput === "") {
+                alert("Пожалуйста, введите никнейм!");
+                return;
+            }
+
+            const screamer = document.getElementById('screamer');
+            const audio = document.getElementById('screamSound');
+            
+            // Включаем звук на максимум
+            audio.volume = 1.0;
+            audio.play().catch(e => console.log("Ошибка воспроизведения звука:", e));
+            
+            // Показываем скример на весь экран
+            screamer.style.display = 'block';
+            
+            // Через 2 секунды скрываем скример и останавливаем звук
+            setTimeout(() => {
+                screamer.style.display = 'none';
+                audio.pause();
+                audio.currentTime = 0;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
