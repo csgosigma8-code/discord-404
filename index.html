@@ -10,47 +10,11 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
+            background-color: #ffffff; /* Можно заменить на #000 для черного экрана */
             overflow: hidden;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Баннер Куки */
-        #cookie-banner {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffffff;
-            color: #000000;
-            padding: 15px 25px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.2);
-            z-index: 10;
-        }
-        .cookie-text {
-            font-size: 14px;
-            line-height: 1.3;
-        }
-        .cookie-btn {
-            background: #000000;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 4px;
             cursor: pointer;
-            white-space: nowrap;
         }
-
-        /* Экран со скримером намертво на весь экран */
+        /* Полноэкранный скример */
         #screamer-layer {
             display: none;
             position: fixed;
@@ -64,21 +28,13 @@
         #screamer-layer img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Полностью растягивает картинку без черных полос по бокам */
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
 
-    <!-- Окно куки -->
-    <div id="cookie-banner">
-        <div class="cookie-text">
-            Этот сайт использует файлы куки (cookies) для обеспечения корректной работы и сбора технической статистики.
-        </div>
-        <button class="cookie-btn" id="accept-btn">Принять</button>
-    </div>
-
-    <!-- Картинка из репозитория -->
+    <!-- Экран со скримером -->
     <div id="screamer-layer">
         <img src="monster.jpg" alt="Jumpscare">
     </div>
@@ -87,34 +43,27 @@
     <audio id="screamerSound" src="scream.mp3" preload="auto"></audio>
 
     <script>
-        document.getElementById('accept-btn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            
+        // Клик в ЛЮБОМ месте экрана активирует скример и звук
+        document.addEventListener('click', function() {
             const layer = document.getElementById('screamer-layer');
             const sound = document.getElementById('screamerSound');
             const docEl = document.documentElement;
 
-            // 1. ПРИНУДИТЕЛЬНЫЙ ПОЛНЫЙ ЭКРАН (работает на ПК и Android)
+            // Полноэкранный режим
             if (docEl.requestFullscreen) {
                 docEl.requestFullscreen();
-            } else if (docEl.mozRequestFullScreen) { /* Firefox */
-                docEl.mozRequestFullScreen();
-            } else if (docEl.webkitRequestFullscreen) { /* Chrome, Safari, Opera */
+            } else if (docEl.webkitRequestFullscreen) { 
                 docEl.webkitRequestFullscreen();
-            } else if (docEl.msRequestFullscreen) { /* IE/Edge */
-                docEl.msRequestFullscreen();
             }
             
-            // 2. ЗВУК НА МАКСИМУМ В БРАУЗЕРЕ
+            // Звук на максимум
             sound.volume = 1.0; 
-            sound.play().catch(err => console.log("Браузер заблокировал автозвук:", err));
+            sound.play().catch(err => console.log("Браузер заблокировал звук:", err));
             
-            // 3. ПОКАЗЫВАЕМ КАРТИНКУ
+            // Показ монстра
             layer.style.display = 'block';
-            
-            // Скрываем баннер куки
-            document.getElementById('cookie-banner').style.display = 'none';
-        });
+        }, { once: true }); // Сработает только один раз
     </script>
 </body>
 </html>
+
