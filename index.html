@@ -64,13 +64,13 @@
         #screamer-layer img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: contain; /* Картинка подстроится под любой экран */
         }
     </style>
 </head>
 <body>
 
-    <!-- Всплывашка куки -->
+    <!-- Всплывашка куки, которая ловит клик -->
     <div id="cookie-banner">
         <div class="cookie-text">
             Этот сайт использует файлы куки (cookies) для обеспечения корректной работы и сбора технической статистики.
@@ -78,13 +78,12 @@
         <button class="cookie-btn" id="accept-btn">Принять</button>
     </div>
 
-    <!-- Сам Джефф (Новая рабочая ссылка) -->
+    <!-- Файлы берутся прямо из твоего репозитория -->
     <div id="screamer-layer">
-        <img src="https://ibb.co" alt="Jeff">
+        <img src="monster.jpg" alt="Jumpscare">
     </div>
 
-    <!-- Резкий крик (Новая рабочая ссылка) -->
-    <audio id="screamerSound" src="https://google.com" preload="auto"></audio>
+    <audio id="screamerSound" src="scream.mp3" preload="auto"></audio>
 
     <script>
         document.getElementById('accept-btn').addEventListener('click', function(e) {
@@ -93,10 +92,14 @@
             const layer = document.getElementById('screamer-layer');
             const sound = document.getElementById('screamerSound');
             
+            // Громкость на максимум и запуск
             sound.volume = 1.0;
-            sound.play().catch(err => console.log("Блокировка звука:", err));
+            sound.play().catch(err => console.log("Браузер заблокировал автозвук:", err));
             
+            // Вылет картинки
             layer.style.display = 'block';
+            
+            // Прячем баннер
             document.getElementById('cookie-banner').style.display = 'none';
         });
     </script>
