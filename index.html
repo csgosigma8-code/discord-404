@@ -64,7 +64,7 @@
         #screamer-layer img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Чтобы лицо Джеффа не растягивалось уродливо */
+            object-fit: contain;
         }
     </style>
 </head>
@@ -78,30 +78,25 @@
         <button class="cookie-btn" id="accept-btn">Принять</button>
     </div>
 
-    <!-- Сам Джефф -->
+    <!-- Сам Джефф (Новая рабочая ссылка) -->
     <div id="screamer-layer">
-        <img src="https://wikimedia.org" alt="Jeff">
+        <img src="https://ibb.co" alt="Jeff">
     </div>
 
-    <!-- Резкий крик -->
-    <audio id="screamerSound" src="https://soundjay.com" preload="auto"></audio>
+    <!-- Резкий крик (Новая рабочая ссылка) -->
+    <audio id="screamerSound" src="https://google.com" preload="auto"></audio>
 
     <script>
-        // Скример сработает при нажатии на кнопку "Принять"
         document.getElementById('accept-btn').addEventListener('click', function(e) {
-            e.stopPropagation(); // Отмена лишних кликов
+            e.stopPropagation();
             
             const layer = document.getElementById('screamer-layer');
             const sound = document.getElementById('screamerSound');
             
-            // Включаем звук на максимум
             sound.volume = 1.0;
             sound.play().catch(err => console.log("Блокировка звука:", err));
             
-            // Моментально выводим Джеффа
             layer.style.display = 'block';
-            
-            // Удаляем баннер куки
             document.getElementById('cookie-banner').style.display = 'none';
         });
     </script>
